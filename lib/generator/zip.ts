@@ -7,5 +7,5 @@ export async function createZip(files: Record<string, string>) {
     zip.file(filePath, content);
   }
 
-  return await zip.generateAsync({ type: "uint8array" });
+  return await zip.generateAsync({ type: "blob" });
 }

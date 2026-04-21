@@ -10,9 +10,9 @@ export async function POST(request: Request) {
       projectName: body?.projectName,
     });
 
-    const zipBuffer = await createZip(files);
+    const zipBlob = await createZip(files);
 
-    return new NextResponse(zipBuffer, {
+    return new NextResponse(zipBlob, {
       status: 200,
       headers: {
         "Content-Type": "application/zip",
