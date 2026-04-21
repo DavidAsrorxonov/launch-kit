@@ -8,6 +8,7 @@ export async function POST(request: Request) {
 
     const files = generateProject({
       projectName: body?.projectName,
+      db: body?.db,
     });
 
     const zipBlob = await createZip(files);

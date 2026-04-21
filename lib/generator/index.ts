@@ -4,7 +4,7 @@ import { mergeFiles } from "./merge-files";
 
 export type GenerateProjectConfig = {
   projectName?: string;
-  db?: string;
+  db?: "mongodb";
 };
 
 export function generateProject(config?: GenerateProjectConfig) {
