@@ -11,6 +11,7 @@ export function generateProject(config?: GenerateProjectConfig) {
   const projectName = config?.projectName?.trim() || "launchkit-app";
   const variables = {
     projectName,
+    hasMongoDB: config?.db === "mongodb",
   };
 
   const baseTemplatePath = path.join(process.cwd(), "templates", "base");
@@ -28,6 +29,32 @@ export function generateProject(config?: GenerateProjectConfig) {
 
     const mongodbFiles = loadTemplate(mongodbTemplatePath, variables);
     files = mergeFiles(files, mongodbFiles);
+
+    const partialPath = path.join(
+      mongodbTemplatePath,
+      "package.json.partial.ejs",
+    );
+
+    const partial = loadTemplate(path.dirname(partialPath), variables)[
+      "package.json.partial.ejs"
+    ];
+
+    if (partial) {
+      const basePackage = JSON.parse(files["package.json"]);
+      const modulePackage = JSON.parse(partial);
+
+      files["package.json"] = JSON.stringify(
+        {
+          ...basePackage,
+          dependencies: {
+            ...basePackage.dependencies,
+            ...modulePackage.dependencies,
+          },
+        },
+        null,
+        2,
+      );
+    }
   }
 
   return files;

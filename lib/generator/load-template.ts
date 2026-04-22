@@ -4,7 +4,7 @@ import ejs from "ejs";
 
 export function loadTemplate(
   templateDir: string,
-  variables: Record<string, string> = {},
+  variables: Record<string, any> = {},
 ): Record<string, string> {
   const files: Record<string, string> = {};
 
@@ -20,6 +20,10 @@ export function loadTemplate(
       } else {
         const rawContent = fs.readFileSync(fullPath, "utf-8");
         const renderedContent = ejs.render(rawContent, variables);
+
+        if (relativePath.endsWith(".partial.ejs")) {
+          return;
+        }
 
         const outputPath = relativePath.replace(/\.ejs$/, "");
 
