@@ -15,6 +15,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
+  CardFooter,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -195,6 +196,21 @@ export default function WizardPage() {
                 </p>
               </div>
             </CardContent>
+            {db === "mongodb" && (
+              <CardFooter className="border-t border-white/10 bg-[#5e49ba]/5 px-6 py-4">
+                <div className="space-y-2 text-xs leading-relaxed text-white/50">
+                  <p>
+                    Ensure your MongoDB cluster allows connections from{" "}
+                    <span className="text-white/80">127.0.0.1</span> in Network
+                    Access settings.
+                  </p>
+                  <p>
+                    Keep your <span className="text-white/80">.env</span> file
+                    private and never commit it to version control.
+                  </p>
+                </div>
+              </CardFooter>
+            )}
           </Card>
 
           <div className="space-y-6">
