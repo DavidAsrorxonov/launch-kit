@@ -4,7 +4,7 @@ A web app that generates a production-ready Next.js starter as a ZIP download.
 
 # Target user
 
-Solo developers who want auth + database setup done quickly.
+Solo developers who want the setup done quickly.
 
 # v1.0.0 includes
 
