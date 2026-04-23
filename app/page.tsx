@@ -5,6 +5,7 @@ import Grid from "@/components/effect/grid";
 import Vignette from "@/components/effect/vignette";
 import Glow from "@/components/effect/glow";
 import Hero from "@/components/hero";
+import Footer from "@/components/footer";
 
 export default function Home() {
   return (
@@ -18,6 +19,8 @@ export default function Home() {
       <Navbar />
 
       <Hero />
+
+      <Footer />
     </main>
   );
 }

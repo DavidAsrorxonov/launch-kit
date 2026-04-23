@@ -1,8 +1,7 @@
 export const tech = [
-  "Next.js 15",
+  "Next.js",
   "MongoDB",
   "Modular",
   "TypeScript",
   "Fast Setup",
-  "shadcn/ui",
 ];
