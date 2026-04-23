@@ -36,7 +36,7 @@ export function Navbar() {
         <Button
           asChild
           size="sm"
-          className="group bg-[#5e49ba] text-white hover:bg-[#6e58cc]"
+          className="group bg-[#5e49ba] text-white !hover:bg-[#6e58cc]"
         >
           <Link href="/wizard" className="flex items-center gap-1.5">
             Generate Starter
