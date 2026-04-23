@@ -235,7 +235,7 @@ export default function WizardPage() {
                     <div>app/layout.tsx</div>
                     <div>README.md</div>
                     <div>package.json</div>
-                    <div>.env.example</div>
+                    <div>.env</div>
 
                     {db === "mongodb" && (
                       <>
