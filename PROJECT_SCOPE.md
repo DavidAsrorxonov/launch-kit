@@ -11,9 +11,8 @@ Solo developers who want auth + database setup done quickly.
 - Web app
 - Next.js only
 - MongoDB only
-- Better Auth only
 - ZIP download
-- .env.example
+- .env
 - README
 - protected dashboard example
 
