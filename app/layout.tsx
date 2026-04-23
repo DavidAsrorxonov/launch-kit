@@ -41,6 +41,14 @@ export const metadata: Metadata = {
       "Build faster with a clean, production-ready Next.js starter. Includes modular database setup and instant ZIP generation.",
     url: "https://launchkit.dovudkhon.com",
     siteName: "LaunchKit",
+    images: [
+      {
+        url: "/images/logo.png",
+        width: 1200,
+        height: 630,
+        alt: "LaunchKit Logo",
+      },
+    ],
     locale: "en_US",
     type: "website",
   },
