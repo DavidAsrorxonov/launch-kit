@@ -6,9 +6,12 @@ const Footer = () => {
   return (
     <footer className="relative z-10 border-t border-white/10 bg-[#080808]">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-8 md:flex-row md:px-10">
-        <p className="text-sm text-white/40">
-          © {new Date().getFullYear()} LaunchKit. Built for developers.
-        </p>
+        <div className="text-sm text-white/40">
+          <p>© {new Date().getFullYear()} LaunchKit</p>
+          <p className="text-white/30">
+            If LaunchKit helps you, a star on GitHub is greatly appreciated.
+          </p>
+        </div>
 
         <Button
           asChild
