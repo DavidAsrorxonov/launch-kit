@@ -6,6 +6,8 @@ import Vignette from "@/components/effect/vignette";
 import Glow from "@/components/effect/glow";
 import Hero from "@/components/hero";
 import Footer from "@/components/footer";
+import FeedbackSection from "@/components/feedback-section";
+import Divider from "@/components/ui/divider";
 
 export default function Home() {
   return (
@@ -17,9 +19,9 @@ export default function Home() {
       </div>
 
       <Navbar />
-
       <Hero />
-
+      <Divider />
+      <FeedbackSection />
       <Footer />
     </main>
   );
