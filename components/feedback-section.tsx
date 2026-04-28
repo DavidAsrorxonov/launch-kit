@@ -1,10 +1,69 @@
+"use client";
+
 import Link from "next/link";
 import { MessageSquare, ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function FeedbackSection() {
+  const [email, setEmail] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (message.trim().length < 10) {
+      toast.error("Invalid Feedback", {
+        description: "Please write at least 10 characters.",
+        duration: 4000,
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/feedback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          message,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to submit feedback.");
+      }
+
+      toast.success("Feedback submitted.", {
+        description: "Thanks! Your feedback helps improve LaunchKit.",
+        duration: 4000,
+      });
+
+      setEmail("");
+      setMessage("");
+    } catch (error) {
+      toast.error("Failed to submit feedback.", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "Something went wrong. Please try again.",
+        duration: 4000,
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <section
       id="feedback"
