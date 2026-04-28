@@ -19,6 +19,8 @@ const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (window.innerWidth < 768) return;
+
     const el = heroRef.current;
     if (!el) return;
 
