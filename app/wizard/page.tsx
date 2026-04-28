@@ -106,7 +106,7 @@ export default function WizardPage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#080808] text-white">
-      <div className="pointer-events-none fixed inset-0 z-0">
+      <div className="pointer-events-none fixed inset-0 z-0 hidden md:block">
         <Glow />
         <Grid />
         <Vignette />
