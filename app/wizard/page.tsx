@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowRight, Database, FolderCog, Sparkles } from "lucide-react";
 
 import { Navbar } from "@/components/navbar";
@@ -20,18 +20,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
 export default function WizardPage() {
   const [projectName, setProjectName] = useState("");
   const [db, setDb] = useState<"" | "mongodb">("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [generated, setGenerated] = useState(false);
+  const [seconds, setSeconds] = useState(5);
 
   async function handleGenerate() {
-    setError("");
-
     if (!projectName.trim()) {
-      setError("Please enter a project name.");
+      toast.error("Missing project name", {
+        description: "Please enter a project name.",
+        duration: 4000,
+      });
       return;
     }
 
@@ -64,13 +67,42 @@ export default function WizardPage() {
       a.remove();
 
       window.URL.revokeObjectURL(url);
+
+      toast.success("Project generated", {
+        description: "Your starter has been downloaded successfully.",
+        duration: 4000,
+      });
+
+      setGenerated(true);
     } catch (err) {
       console.error(err);
-      setError("Something went wrong while generating your starter.");
+      toast.error("Generation failed", {
+        description: "Something went wrong while generating the project.",
+        duration: 4000,
+      });
     } finally {
       setIsLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (!generated) return;
+
+    setSeconds(5);
+
+    const interval = setInterval(() => {
+      setSeconds((prev) => prev - 1);
+    }, 1000);
+
+    const timeout = setTimeout(() => {
+      setGenerated(false);
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [generated]);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#080808] text-white">
@@ -172,12 +204,6 @@ export default function WizardPage() {
                 </div>
               </div>
 
-              {error ? (
-                <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-                  {error}
-                </div>
-              ) : null}
-
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Button
                   onClick={handleGenerate}
@@ -195,6 +221,23 @@ export default function WizardPage() {
                   Downloads a zip instantly from your current configuration.
                 </p>
               </div>
+
+              {generated && (
+                <div className="relative mt-6 rounded-xl border border-[#5e49ba]/30 bg-[#5e49ba]/10 p-4 text-sm text-white/70 transition-all duration-300">
+                  <div className="absolute right-3 top-3 rounded-md bg-black/40 px-2 py-0.5 text-[10px] text-white/50">
+                    {seconds}s
+                  </div>
+
+                  <p className="mb-2 font-medium text-white">Next steps:</p>
+
+                  <pre className="rounded-md bg-black/40 p-3 text-xs text-white/80">
+                    {`unzip ${projectName || "your-project"}.zip
+cd ${projectName || "your-project"}
+npm install
+npm run dev`}
+                  </pre>
+                </div>
+              )}
             </CardContent>
             {db === "mongodb" && (
               <CardFooter className="border-t border-white/10 bg-[#5e49ba]/5 px-6 py-4">
