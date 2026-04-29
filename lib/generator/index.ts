@@ -5,20 +5,24 @@ import { mergeFiles } from "./merge-files";
 export type GenerateProjectConfig = {
   projectName?: string;
   db?: "mongodb";
+  auth?: "better-auth";
 };
 
 export function generateProject(config?: GenerateProjectConfig) {
   const projectName = config?.projectName?.trim() || "launchkit-app";
+  const hasAuth = config?.auth === "better-auth";
+  const hasMongoDB = config?.db === "mongodb" || hasAuth;
   const variables = {
     projectName,
-    hasMongoDB: config?.db === "mongodb",
+    hasMongoDB,
+    hasAuth,
   };
 
   const baseTemplatePath = path.join(process.cwd(), "templates", "base");
 
   let files = loadTemplate(baseTemplatePath, variables);
 
-  if (config?.db === "mongodb") {
+  if (hasMongoDB) {
     const mongodbTemplatePath = path.join(
       process.cwd(),
       "templates",
@@ -30,13 +34,8 @@ export function generateProject(config?: GenerateProjectConfig) {
     const mongodbFiles = loadTemplate(mongodbTemplatePath, variables);
     files = mergeFiles(files, mongodbFiles);
 
-    const partialPath = path.join(
-      mongodbTemplatePath,
-      "package.json.partial.ejs",
-    );
-
-    const partial = loadTemplate(path.dirname(partialPath), variables)[
-      "package.json.partial.ejs"
+    const partial = loadTemplate(mongodbTemplatePath, variables)[
+      "package.json.partial"
     ];
 
     if (partial) {
