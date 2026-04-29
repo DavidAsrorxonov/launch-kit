@@ -56,5 +56,38 @@ export function generateProject(config?: GenerateProjectConfig) {
     }
   }
 
+  if (hasAuth) {
+    const authTemplatePath = path.join(
+      process.cwd(),
+      "templates",
+      "modules",
+      "auth",
+      "better-auth",
+    );
+    const authFiles = loadTemplate(authTemplatePath, variables);
+    files = mergeFiles(files, authFiles);
+
+    const partial = loadTemplate(authTemplatePath, variables)[
+      "package.json.partial"
+    ];
+
+    if (partial) {
+      const basePackage = JSON.parse(files["package.json"]);
+      const modulePackage = JSON.parse(partial);
+
+      files["package.json"] = JSON.stringify(
+        {
+          ...basePackage,
+          dependencies: {
+            ...basePackage.dependencies,
+            ...modulePackage.dependencies,
+          },
+        },
+        null,
+        2,
+      );
+    }
+  }
+
   return files;
 }
