@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ArrowRight, Database, FolderCog, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Database,
+  FolderCog,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 
 import { Navbar } from "@/components/navbar";
 import Glow from "@/components/effect/glow";
@@ -28,6 +34,7 @@ export default function WizardPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [generated, setGenerated] = useState(false);
   const [seconds, setSeconds] = useState(5);
+  const [auth, setAuth] = useState<"" | "better-auth">("");
 
   async function handleGenerate() {
     if (!projectName.trim()) {
@@ -49,6 +56,7 @@ export default function WizardPage() {
         body: JSON.stringify({
           projectName,
           db: db || undefined,
+          auth: auth || undefined,
         }),
       });
 
@@ -82,6 +90,14 @@ export default function WizardPage() {
       });
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  function handleAuthSelect(value: "" | "better-auth") {
+    setAuth(value);
+
+    if (value === "better-auth") {
+      setDb("mongodb");
     }
   }
 
@@ -167,11 +183,12 @@ export default function WizardPage() {
                   <button
                     type="button"
                     onClick={() => setDb("")}
+                    disabled={auth === "better-auth"}
                     className={`rounded-2xl border p-4 text-left transition ${
                       db === ""
                         ? "border-[#5e49ba]/70 bg-[#5e49ba]/10"
                         : "border-white/10 bg-white/2 hover:border-white/20"
-                    }`}
+                    } ${auth === "better-auth" ? "cursor-not-allowed border-dashed opacity-50" : ""}`}
                   >
                     <div className="mb-3 flex items-center gap-2">
                       <FolderCog className="h-4 w-4 text-[#9d8fe0]" />
@@ -202,6 +219,53 @@ export default function WizardPage() {
                     </p>
                   </button>
                 </div>
+              </div>
+
+              <div className="space-y-4">
+                <Label className="text-white/80">Authentication</Label>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <button
+                    type="button"
+                    onClick={() => handleAuthSelect("")}
+                    className={`rounded-2xl border p-4 text-left transition ${auth === "" ? "border-[#5e49ba]/70 bg-[#5e49ba]/10" : "border-white/10 bg-white/2 hover:border-white/20"}`}
+                  >
+                    <div className="mb-3 flex items-center gap-2">
+                      <FolderCog className="h-4 w-4 text-[#9d8fe0]" />
+                      <span className="font-medium text-white">No auth</span>
+                    </div>
+                    <p className="text-sm leading-6 text-white/40">
+                      Generate the starter without authentication.
+                    </p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleAuthSelect("better-auth")}
+                    className={`rounded-2xl border p-4 text-left transition ${
+                      auth === "better-auth"
+                        ? "border-[#5e49ba]/70 bg-[#5e49ba]/10"
+                        : "border-white/10 bg-white/2 hover:border-white/20"
+                    }`}
+                  >
+                    <div className="mb-3 flex items-center gap-2">
+                      <ShieldCheck className="h-4 w-4 text-[#9d8fe0]" />
+                      <span className="font-medium text-white">
+                        Better Auth + Google
+                      </span>
+                    </div>
+                    <p className="text-sm leading-6 text-white/40">
+                      Add Google OAuth, session handling, login, and protected
+                      dashboard.
+                    </p>
+                  </button>
+                </div>
+                {auth === "better-auth" && (
+                  <p className="text-xs leading-6 text-white/35">
+                    Better Auth requires a database. MongoDB is locked as
+                    default.
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -301,6 +365,16 @@ npm run dev`}
                         <div>lib/db.ts</div>
                         <div>models/User.ts</div>
                         <div>app/api/test-db/route.ts</div>
+                      </>
+                    )}
+
+                    {auth === "better-auth" && (
+                      <>
+                        <div>app/login/page.tsx</div>
+                        <div>app/dashboard/page.tsx</div>
+                        <div>app/api/auth/[...all]/route.ts</div>
+                        <div>lib/auth.ts</div>
+                        <div>lib/auth-client.ts</div>
                       </>
                     )}
                   </div>
