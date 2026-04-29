@@ -101,8 +101,14 @@ export const authOutputFiles: IOutputFileNode[] = [
     name: "lib",
     type: "folder",
     children: [
-      { name: "auth.ts", type: "file" },
-      { name: "auth-client.ts", type: "file" },
+      {
+        name: "auth",
+        type: "folder",
+        children: [
+          { name: "auth.ts", type: "file" },
+          { name: "auth-client.ts", type: "file" },
+        ],
+      },
     ],
   },
 ];

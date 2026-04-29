@@ -27,6 +27,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { mergeOutputTrees } from "@/lib/helper/merge-output-trees";
+import {
+  authOutputFiles,
+  baseOutputFiles,
+  mongoOutputFiles,
+} from "@/constants/output-files";
+import { renderOutputTree } from "@/components/render-output-tree";
 
 export default function WizardPage() {
   const [projectName, setProjectName] = useState("");
@@ -119,6 +126,12 @@ export default function WizardPage() {
       clearTimeout(timeout);
     };
   }, [generated]);
+
+  const outputTree = mergeOutputTrees([
+    baseOutputFiles,
+    db === "mongodb" ? mongoOutputFiles : [],
+    auth === "better-auth" ? authOutputFiles : [],
+  ]);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#080808] text-white">
@@ -354,29 +367,7 @@ npm run dev`}
                   </p>
 
                   <div className="space-y-2 text-white/45">
-                    <div>app/page.tsx</div>
-                    <div>app/layout.tsx</div>
-                    <div>README.md</div>
-                    <div>package.json</div>
-                    <div>.env</div>
-
-                    {db === "mongodb" && (
-                      <>
-                        <div>lib/db.ts</div>
-                        <div>models/User.ts</div>
-                        <div>app/api/test-db/route.ts</div>
-                      </>
-                    )}
-
-                    {auth === "better-auth" && (
-                      <>
-                        <div>app/login/page.tsx</div>
-                        <div>app/dashboard/page.tsx</div>
-                        <div>app/api/auth/[...all]/route.ts</div>
-                        <div>lib/auth.ts</div>
-                        <div>lib/auth-client.ts</div>
-                      </>
-                    )}
+                    {renderOutputTree(outputTree)}
                   </div>
                 </div>
               </CardContent>
