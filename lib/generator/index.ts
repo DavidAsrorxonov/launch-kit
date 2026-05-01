@@ -1,6 +1,7 @@
 import path from "path";
 import { loadTemplate } from "./load-template";
 import { mergeFiles } from "./merge-files";
+import { loadPartialTemplate } from "./load-partial";
 
 export type GenerateProjectConfig = {
   projectName?: string;
@@ -9,6 +10,8 @@ export type GenerateProjectConfig = {
 };
 
 export function generateProject(config?: GenerateProjectConfig) {
+  console.log("Generate project config:", config);
+
   const projectName = config?.projectName?.trim() || "launchkit-app";
   const hasAuth = config?.auth === "better-auth";
   const hasMongoDB = config?.db === "mongodb" || hasAuth;
@@ -18,11 +21,16 @@ export function generateProject(config?: GenerateProjectConfig) {
     hasAuth,
   };
 
+  console.log("HAS MONGODB:", hasMongoDB);
+
+  console.log("HAS AUTH:", hasAuth);
+
   const baseTemplatePath = path.join(process.cwd(), "templates", "base");
 
   let files = loadTemplate(baseTemplatePath, variables);
 
   if (hasMongoDB) {
+    console.log("HAS MONGODB STARTING...");
     const mongodbTemplatePath = path.join(
       process.cwd(),
       "templates",
@@ -34,9 +42,10 @@ export function generateProject(config?: GenerateProjectConfig) {
     const mongodbFiles = loadTemplate(mongodbTemplatePath, variables);
     files = mergeFiles(files, mongodbFiles);
 
-    const partial = loadTemplate(mongodbTemplatePath, variables)[
-      "package.json.partial"
-    ];
+    const partial = loadPartialTemplate(
+      path.join(mongodbTemplatePath, "package.json.partial.ejs"),
+      variables,
+    );
 
     if (partial) {
       const basePackage = JSON.parse(files["package.json"]);
@@ -57,6 +66,7 @@ export function generateProject(config?: GenerateProjectConfig) {
   }
 
   if (hasAuth) {
+    console.log("HAS AUTH STARTING...");
     const authTemplatePath = path.join(
       process.cwd(),
       "templates",
@@ -67,9 +77,23 @@ export function generateProject(config?: GenerateProjectConfig) {
     const authFiles = loadTemplate(authTemplatePath, variables);
     files = mergeFiles(files, authFiles);
 
-    const partial = loadTemplate(authTemplatePath, variables)[
-      "package.json.partial"
-    ];
+    console.log("AUTH TEMPLATE PATH:", authTemplatePath);
+    console.log("AUTH FILES:", Object.keys(authFiles));
+
+    const envPartial = loadPartialTemplate(
+      path.join(authTemplatePath, ".env.example.partial.ejs"),
+      variables,
+    );
+    files[".env.example"] = (files[".env.example"] || "") + "\n" + envPartial;
+
+    if (envPartial) {
+      files[".env.example"] = (files[".env.example"] || "") + "\n" + envPartial;
+    }
+
+    const partial = loadPartialTemplate(
+      path.join(authTemplatePath, "package.json.partial.ejs"),
+      variables,
+    );
 
     if (partial) {
       const basePackage = JSON.parse(files["package.json"]);

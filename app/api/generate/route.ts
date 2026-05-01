@@ -6,6 +6,8 @@ export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
 
+    console.log("FROM API/GENERATE BODY:", body);
+
     const files = generateProject({
       projectName: body?.projectName,
       db: body?.db,
