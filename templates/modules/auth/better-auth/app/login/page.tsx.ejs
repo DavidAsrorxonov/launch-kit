@@ -1,3 +1,22 @@
+"use client";
+
+import { authClient } from "@/lib/auth/auth-client";
+
 export default function LoginPage() {
-  return <div>Login page</div>;
+  const handleGoogleSignIn = () => {
+    authClient.signIn.social({
+      provider: "google",
+    });
+  };
+
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <button
+        onClick={handleGoogleSignIn}
+        className="rounded-lg bg-black px-4 py-2 text-white"
+      >
+        Sign in with Google
+      </button>
+    </div>
+  );
 }
