@@ -2,6 +2,7 @@ import path from "path";
 import { loadTemplate } from "./load-template";
 import { mergeFiles } from "./merge-files";
 import { loadPartialTemplate } from "./load-partial";
+import { mergeEnv } from "../helper/merge-env";
 
 export type GenerateProjectConfig = {
   projectName?: string;
@@ -81,13 +82,12 @@ export function generateProject(config?: GenerateProjectConfig) {
     console.log("AUTH FILES:", Object.keys(authFiles));
 
     const envPartial = loadPartialTemplate(
-      path.join(authTemplatePath, ".env.example.partial.ejs"),
+      path.join(authTemplatePath, "env.example.partial.ejs"),
       variables,
     );
-    files[".env.example"] = (files[".env.example"] || "") + "\n" + envPartial;
 
     if (envPartial) {
-      files[".env.example"] = (files[".env.example"] || "") + "\n" + envPartial;
+      files[".env.example"] = mergeEnv(files[".env.example"] || "", envPartial);
     }
 
     const partial = loadPartialTemplate(
