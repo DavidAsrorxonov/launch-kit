@@ -320,7 +320,6 @@ If template volume, module count, or ZIP size grows meaningfully, generation may
 - `app/api/generate/route.ts` and `lib/generator/index.ts` contain debug `console.log` statements that should be removed before publishing.
 - `/api/generate` does not currently validate `projectName`, `db`, or `auth` against a schema before calling the generator.
 - `loadPartialTemplate()` assumes the partial exists and will throw if it does not.
-- The Better Auth env partial file is named `.env.example.partial.ejs`, but the generator currently looks for `env.example.partial.ejs` without the leading dot.
 - The base generated `package.json` currently includes `mongoose` even when MongoDB is not selected.
 - Package merging only handles `dependencies`.
 - Environment merging is line-based and does not understand grouped sections.

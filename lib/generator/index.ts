@@ -82,7 +82,7 @@ export function generateProject(config?: GenerateProjectConfig) {
     console.log("AUTH FILES:", Object.keys(authFiles));
 
     const envPartial = loadPartialTemplate(
-      path.join(authTemplatePath, "env.example.partial.ejs"),
+      path.join(authTemplatePath, ".env.example.partial.ejs"),
       variables,
     );
 
