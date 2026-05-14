@@ -4,7 +4,7 @@ import ejs from "ejs";
 
 export function loadTemplate(
   templateDir: string,
-  variables: Record<string, any> = {},
+  variables: Record<string, unknown> = {},
 ): Record<string, string> {
   const files: Record<string, string> = {};
 
@@ -17,18 +17,19 @@ export function loadTemplate(
 
       if (entry.isDirectory()) {
         walk(fullPath);
-      } else {
-        const rawContent = fs.readFileSync(fullPath, "utf-8");
-        const renderedContent = ejs.render(rawContent, variables);
-
-        if (relativePath.endsWith(".partial.ejs")) {
-          return;
-        }
-
-        const outputPath = relativePath.replace(/\.ejs$/, "");
-
-        files[outputPath] = renderedContent;
+        continue;
       }
+
+      if (relativePath.endsWith(".partial.ejs")) {
+        continue;
+      }
+
+      const rawContent = fs.readFileSync(fullPath, "utf-8");
+      const renderedContent = ejs.render(rawContent, variables);
+
+      const outputPath = relativePath.replace(/\.ejs$/, "");
+
+      files[outputPath] = renderedContent;
     }
   }
 
