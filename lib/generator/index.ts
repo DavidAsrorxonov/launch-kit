@@ -11,8 +11,6 @@ export type GenerateProjectConfig = {
 };
 
 export function generateProject(config?: GenerateProjectConfig) {
-  console.log("Generate project config:", config);
-
   const projectName = config?.projectName?.trim() || "launchkit-app";
   const hasAuth = config?.auth === "better-auth";
   const hasMongoDB = config?.db === "mongodb" || hasAuth;
@@ -22,16 +20,11 @@ export function generateProject(config?: GenerateProjectConfig) {
     hasAuth,
   };
 
-  console.log("HAS MONGODB:", hasMongoDB);
-
-  console.log("HAS AUTH:", hasAuth);
-
   const baseTemplatePath = path.join(process.cwd(), "templates", "base");
 
   let files = loadTemplate(baseTemplatePath, variables);
 
   if (hasMongoDB) {
-    console.log("HAS MONGODB STARTING...");
     const mongodbTemplatePath = path.join(
       process.cwd(),
       "templates",
@@ -67,7 +60,6 @@ export function generateProject(config?: GenerateProjectConfig) {
   }
 
   if (hasAuth) {
-    console.log("HAS AUTH STARTING...");
     const authTemplatePath = path.join(
       process.cwd(),
       "templates",
@@ -77,9 +69,6 @@ export function generateProject(config?: GenerateProjectConfig) {
     );
     const authFiles = loadTemplate(authTemplatePath, variables);
     files = mergeFiles(files, authFiles);
-
-    console.log("AUTH TEMPLATE PATH:", authTemplatePath);
-    console.log("AUTH FILES:", Object.keys(authFiles));
 
     const envPartial = loadPartialTemplate(
       path.join(authTemplatePath, ".env.example.partial.ejs"),
